@@ -1,3 +1,4 @@
 rootProject.name = 'toggle-server'
 
 include 'ui'
+include 'toggle-client'
