@@ -1,0 +1,66 @@
+def getAvailablePort() {
+    return new ServerSocket(0).getLocalPort()
+}
+
+def cargoHome = "$buildDir/cargo"
+def jmxPort = getAvailablePort()
+def servletPort = project.cargoConfig.portNumber ?: getAvailablePort()
+
+def environment = project.hasProperty('env') ? project.getProperty('env') : 'local'
+
+cargo {
+    containerId = 'tomcat7x'
+
+    deployable {
+        file = file("$buildDir/$libsDirName/${project.name}.war")
+        context = project.name
+    }
+
+    local {
+        homeDir = file(cargoHome)
+        configHomeDir = file(cargoHome)
+        outputFile = file('build/output.log')
+        // timeout = 60000
+
+        containerProperties {
+            property 'cargo.tomcat.ajp.port', getAvailablePort()
+            property 'cargo.rmi.port', getAvailablePort()
+            property 'cargo.servlet.port', servletPort
+        }
+
+        systemProperties {
+            property 'com.sun.management.jmxremote.port', jmxPort
+            property 'com.sun.management.jmxremote.ssl', false
+            property 'com.sun.management.jmxremote.authenticate', false
+        }
+
+        installer {
+            installUrl = 'https://archive.apache.org/dist/tomcat/tomcat-7/v7.0.81/bin/apache-tomcat-7.0.81.zip'
+            downloadDir = file("$buildDir/download")
+            extractDir = file("$buildDir/extract")
+        }
+    }
+}
+
+task createCargoHome() {
+    doLast {
+        if (!file(cargoHome).exists() && !file(cargoHome).mkdirs()) {
+            println "Failed to create directory '${cargoHome}'"
+        }
+    }
+}
+
+cargoStartLocal.dependsOn createCargoHome
+cargoRunLocal.dependsOn createCargoHome
+cargoRunLocal.dependsOn assemble
+
+// https://github.com/bmuschko/gradle-cargo-plugin/issues/118
+cargoStartLocal {
+    def activeProfiles = 'test-local'
+    systemProperties = [
+        'com.sun.management.jmxremote.port': jmxPort,
+        'com.sun.management.jmxremote.ssl': 'false',
+        'com.sun.management.jmxremote.authenticate': 'false',
+        'spring.profiles.active': "$activeProfiles"
+    ]
+}

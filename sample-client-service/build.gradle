@@ -1,0 +1,48 @@
+plugins {
+    id 'java'
+    id 'eclipse-wtp'
+    id 'org.springframework.boot' version '2.0.0.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.4.RELEASE'
+    id 'war'
+    id "com.bmuschko.cargo" version "2.6"
+}
+
+ext {
+    cargoConfig = [ debugPort : '5018', portNumber : '8900' ]
+}
+
+apply from: "$rootDir/gradle/cargo-config.gradle"
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    providedRuntime 'javax.el:javax.el-api:3.0.0'
+
+    implementation 'org.featuretoggle.client:toggle-client:1.0.0'
+    implementation('org.springframework.boot:spring-boot-starter-web') {
+        exclude(module: 'hibernate-validator')
+    }
+    implementation 'org.slf4j:slf4j-api:1.7.25'
+
+    testImplementation 'org.slf4j:slf4j-log4j12:1.7.25'
+    testImplementation 'junit:junit:4.12'
+}
+
+bootRun {
+    doFirst {
+        systemProperty "server.servlet.contextPath", "/$project.name"
+    }
+}
+
+clean {
+    dependsOn gradle.includedBuild('toggle-server').task(':toggle-client:clean')
+    mustRunAfter gradle.includedBuild('toggle-server').task(':toggle-client:clean')
+}
+
+build {
+    dependsOn gradle.includedBuild('toggle-server').task(':toggle-client:build')
+    mustRunAfter gradle.includedBuild('toggle-server').task(':toggle-client:build')
+}

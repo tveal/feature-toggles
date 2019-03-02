@@ -1,0 +1,3 @@
+rootProject.name = 'sample-client-service'
+
+includeBuild '../toggle-server'

@@ -20,26 +20,26 @@ public class ApiController implements ErrorController {
         {
             put("toggle1", true);
             put("toggle2", false);
+            put("my-feature", true);
         }
     };
 
     /**
-     * Sample url:
-     * http://localhost:8090/toggle-server/get-toggle?toggleId=feature%2FPROJ-1234
+     * Sample url: http://localhost:8090/toggle-server/get-toggle?toggleId=feature%2FPROJ-1234
      */
     @RequestMapping("/get-toggle")
-    public String getToggle(@RequestParam("toggleId") String toggleId) {
-        String returnValue;
-        
+    public String getToggle(@RequestParam("toggleId") final String toggleId) {
+        String returnValue = "false";
+
         try {
             String decodedToggleId = URLDecoder.decode(toggleId, StandardCharsets.UTF_8.name());
             Boolean toggleValue = toggles.get(decodedToggleId);
             if (toggleValue != null) {
-                returnValue = "Toggle value=" + toggleValue.booleanValue();
+                returnValue = toggleValue.toString();
             } else {
                 returnValue = "You requested value for toggleId: " + decodedToggleId;
             }
-        } catch(UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException e) {
             returnValue = "Invalid toggleId";
         }
         return returnValue;

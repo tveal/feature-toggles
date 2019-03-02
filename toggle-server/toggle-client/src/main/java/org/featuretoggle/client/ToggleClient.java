@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ToggleClient {
-    public static final String APP_PROPS = "app.properties";
+    public static final String APP_PROPS = "application.properties";
 
     public static boolean isFeatureEnabled(final String toggleId) {
         boolean returnValue;
@@ -25,13 +25,15 @@ public class ToggleClient {
 
             if (toggleServerUri != null) {
                 Response response = requestToggleValue(toggleId, toggleServerUri);
-                returnValue = Boolean.parseBoolean(response.readEntity(String.class));
+                String respValue = response.readEntity(String.class);
+                log.info("server response for toggleId: {}, value: {}", toggleId, respValue);
+                returnValue = Boolean.parseBoolean(respValue);
             } else {
                 log.error("toggleServerUri not found in {}", APP_PROPS);
                 returnValue = getToggleValueFromProps(toggleId, props);
             }
         } catch (ProcessingException e) {
-            log.error("toggle-server is unavailable, checking {} for {}; {}", APP_PROPS, toggleId, e);
+            log.error("toggle-server is unavailable, checking {} for {};", APP_PROPS, toggleId, e);
             returnValue = getToggleValueFromProps(toggleId, props);
         }
 
