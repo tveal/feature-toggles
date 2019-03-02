@@ -1,0 +1,28 @@
+plugins {
+    id 'base'
+}
+
+ext.getCommandForFolder = { folderName, cmd ->
+    if (!new File("$projectDir/$folderName").exists()) {
+        return cmd
+    } else {
+        return ['echo', "$cmd not run because $folderName/ already extists"]
+    }
+}
+
+// This task is necessary on an initial gradle build (ex. after a fresh clone)
+task npmInstall(type: Exec) {
+    commandLine 'echo', 'something when wrong'
+    doFirst {
+        commandLine getCommandForFolder('node_modules', ['npm', 'install'])
+    }
+}
+
+task npmBuild(type: Exec, dependsOn: 'npmInstall') {
+    commandLine 'echo', 'something when wrong'
+    doFirst {
+        commandLine getCommandForFolder('build', ['npm', 'run', 'build'])
+    }
+}
+
+build.dependsOn 'npmBuild'
