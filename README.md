@@ -10,5 +10,5 @@ Goals:
 - Client Jar (consumed in client-service):
     - Provide a method such as `ToggleClient.isFeatureEnabled("my-toggle")` gets first available value:
         1. REST API (server value)
-        2. `app.properties` on classpath of client-service
+        2. `application.properties` on classpath of client-service
         3. default to false

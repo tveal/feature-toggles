@@ -44,6 +44,7 @@ public class ToggleClient {
         String togglePropValue = props.getProperty(toggleId);
         boolean boolValue = false;
         if (togglePropValue != null) {
+            log.info("Found {} value: {}, from {}", toggleId, togglePropValue, APP_PROPS);
             boolValue = Boolean.parseBoolean(togglePropValue);
         } else {
             log.error("{} not found in {}, defaulting to false", toggleId, APP_PROPS);

@@ -13,3 +13,5 @@ TODO:
     - tests
     - jacoco coverage
     - code quality
+- doc dev workflow
+- doc usage
