@@ -13,5 +13,6 @@ TODO:
     - tests
     - jacoco coverage
     - code quality
+    - get logger working in cargo container
 - doc dev workflow
 - doc usage
