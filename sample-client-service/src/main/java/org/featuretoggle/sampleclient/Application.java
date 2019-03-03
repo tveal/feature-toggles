@@ -1,4 +1,4 @@
-package hello;
+package org.featuretoggle.sampleclient;
 
 import java.util.Arrays;
 
@@ -20,18 +20,5 @@ public class Application extends SpringBootServletInitializer {
     @Override
     protected SpringApplicationBuilder configure(final SpringApplicationBuilder application) {
         return application.sources(Application.class);
-    }
-
-    @Bean
-    public CommandLineRunner commandLineRunner(final ApplicationContext ctx) {
-        return args -> {
-            System.out.println("Let's inspect the beans provided by Spring Boot");
-
-            String[] beanNames = ctx.getBeanDefinitionNames();
-            Arrays.sort(beanNames);
-            for (String beanName : beanNames) {
-                System.out.println(beanName);
-            }
-        };
     }
 }

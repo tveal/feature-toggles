@@ -7,6 +7,8 @@ plugins {
     id "com.bmuschko.cargo" version "2.6"
 }
 
+group = 'org.featuretoggle.sampleclient'
+
 ext {
     cargoConfig = [ debugPort : '5018', portNumber : '8900' ]
 }

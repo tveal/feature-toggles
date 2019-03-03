@@ -7,6 +7,12 @@ plugins {
     id "com.bmuschko.cargo" version "2.6"
 }
 
+group = 'org.featuretoggle.server'
+
+allprojects {
+    version = '1.0.0'
+}
+
 project.webAppDirName = 'ui/build'
 ext {
     cargoConfig = [ debugPort : '5018', portNumber : '8090' ]

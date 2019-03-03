@@ -1,4 +1,4 @@
-package hello;
+package org.featuretoggle.server;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -16,6 +16,7 @@ public class ApiController implements ErrorController {
 
     private static final String ERR_PATH = "/error";
 
+    @SuppressWarnings("serial")
     private static final Map<String, Boolean> toggles = new HashMap<String, Boolean>() {
         {
             put("toggle1", true);

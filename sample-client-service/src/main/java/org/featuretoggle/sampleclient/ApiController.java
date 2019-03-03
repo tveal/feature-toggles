@@ -1,4 +1,4 @@
-package hello;
+package org.featuretoggle.sampleclient;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -12,3 +12,50 @@ Goals:
         1. REST API (server value)
         2. `application.properties` on classpath of _client-service_
         3. default to false
+
+## Build Things
+
+### toggle-server and toggle-client
+
+The `toggle-server` project contains the `toggle-client` subproject, collectively producing:
+- build/libs/toggle-server-${version}.war
+- toggle-client/build/libs/toggle-client-${version}.jar
+
+```bash
+# from toggle-server directory
+./gradlew clean build
+```
+
+### sample-client-service
+
+```bash
+# from sample-client-service directory
+./gradlew clean build
+```
+
+
+## Run Things Locally
+
+Currently, `cargoRunLocal` gradle task doesn't show the slf4j logs, so use `bootRun` for now (faster but no ui for server). You should also periodically run `./gradlew clean build` in the respective directories when changing things.
+
+### Server
+
+```bash
+# from toggle-server directory
+./gradlew bootRun
+```
+
+Request toggle value with a url like:
+
+http://localhost:8090/toggle-server/get-toggle?toggleId=my-feature
+
+### Sample Client Service
+
+```bash
+# from sample-client-service directory
+./gradlew bootRun
+```
+
+Visit the following url:
+
+http://localhost:8900/sample-client-service
