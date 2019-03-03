@@ -2,6 +2,8 @@
 
 Driving Idea: Have a centralized toggle server with in-memory db and REST API for retrieving real-time toggle values.
 
+Why? The pursuit (and necessity) of [Trunk Based Development](https://trunkbaseddevelopment.com/). See [Feature Flags](https://trunkbaseddevelopment.com/feature-flags/), especially [Runtime Switchable](https://trunkbaseddevelopment.com/feature-flags/#runtime-switchable).
+
 Goals:
 - server:
     - REST API for toggle values
