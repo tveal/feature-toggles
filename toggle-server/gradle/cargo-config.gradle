@@ -12,7 +12,7 @@ cargo {
     containerId = 'tomcat7x'
 
     deployable {
-        file = file("$buildDir/$libsDirName/${project.name}.war")
+        file = file("$buildDir/$libsDirName/${project.name}-${project.version}.war")
         context = project.name
     }
 
