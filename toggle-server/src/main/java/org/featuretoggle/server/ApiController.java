@@ -3,8 +3,6 @@ package org.featuretoggle.server;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,15 +14,6 @@ public class ApiController implements ErrorController {
 
     private static final String ERR_PATH = "/error";
 
-    @SuppressWarnings("serial")
-    private static final Map<String, Boolean> toggles = new HashMap<String, Boolean>() {
-        {
-            put("toggle1", true);
-            put("toggle2", false);
-            put("my-feature", true);
-        }
-    };
-
     /**
      * Sample url: http://localhost:8090/toggle-server/get-toggle?toggleId=feature%2FPROJ-1234
      */
@@ -34,7 +23,7 @@ public class ApiController implements ErrorController {
 
         try {
             String decodedToggleId = URLDecoder.decode(toggleId, StandardCharsets.UTF_8.name());
-            Boolean toggleValue = toggles.get(decodedToggleId);
+            Boolean toggleValue = ToggleRepository.retrieveToggleValue(decodedToggleId);
             if (toggleValue != null) {
                 returnValue = toggleValue.toString();
             } else {

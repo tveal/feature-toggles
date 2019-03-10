@@ -4,12 +4,22 @@ TODO:
 - Research in-memory db solution
 - build this out...
     - ~~server with REST~~
-    - ~~Client Jar~~
+    - ~~api-java-rest~~
         1. ~~val from REST~~
         2. ~~val from application.properties~~
         3. ~~val default false~~
-        4. ~~get serverUri from properties file~~
+        - ~~get serverUri from properties file~~
+    - ~~Add SSE impl to server~~
+    - ~~api-java-sse~~
+        1. ~~val from cache~~
+        2. ~~val from application.properites~~
+        3. ~~val default false~~
+        - ~~get serverUri from properties file~~
+        - ~~retry server connection on lost connection~~
+        - ~~update cache on SSE update~~
     - db integration
+        - in-memory db solution
+        - persistent db solution with cold-start
     - UI for management
     - tests
     - jacoco coverage
@@ -34,7 +44,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.featuretoggle.client:toggle-client:1.0.0'
+    implementation 'org.featuretoggle.client:api-java-sse:1.0.0'
 }
 ```
 

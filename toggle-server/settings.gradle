@@ -1,4 +1,6 @@
 rootProject.name = 'toggle-server'
 
 include 'ui'
-include 'toggle-client'
+include 'api-java-abstract'
+include 'api-java-rest'
+include 'api-java-sse'

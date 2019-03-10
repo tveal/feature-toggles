@@ -1,14 +1,12 @@
 package org.featuretoggle.client;
 
-import java.io.InputStream;
-
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class ConnectorUtils {
+public class RestUtils {
 
     public static Response requestToggleValue(final String toggleId, final String toggleServerUri) {
         log.info("Checking for toggle value for toggleId={} and toggleServerUri={}", toggleId, toggleServerUri);
@@ -17,9 +15,5 @@ public class ConnectorUtils {
             .path("toggle-server/get-toggle")
             .request()
             .get();
-    }
-
-    public static InputStream getResourceAsStream(final String filename) {
-        return ToggleClient.class.getClassLoader().getResourceAsStream(filename);
     }
 }

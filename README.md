@@ -9,9 +9,11 @@ Goals:
     - REST API for toggle values
     - provide consumable client jar
     - Have UI for toggle management (set, add, remove)
+    - Have in-memory and persistent toggle storage for server
+    - SSE impl for toggle changes
 - client jar (consumed in client-service):
     - Provide a method such as `ToggleClient.isFeatureEnabled("my-toggle")` that gets the first available value:
-        1. REST API (server value)
+        1. server value
         2. `application.properties` on classpath of _client-service_
         3. default to false
 

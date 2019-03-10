@@ -2,10 +2,7 @@ package org.featuretoggle.client;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Properties;
 
 import javax.ws.rs.core.Response;
 
@@ -20,7 +17,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ ConnectorUtils.class })
+@PrepareForTest({ RestUtils.class, FileUtils.class })
 public class ToggleClientTest {
 
     @Mock
@@ -28,20 +25,21 @@ public class ToggleClientTest {
 
     @Before
     public void setup() {
-        PowerMockito.mockStatic(ConnectorUtils.class);
+        PowerMockito.mockStatic(RestUtils.class);
+        PowerMockito.mockStatic(FileUtils.class);
     }
 
     @Test
     public void isFeatureEnabled_shouldLoadToggleValuesFromProps_orDefaultFalse() throws Exception {
-        List<String> mockAppProps = new ArrayList<>();
-        mockAppProps.add("toggle1=false");
-        mockAppProps.add("toggle2=true");
+        Properties props = new Properties();
+        props.setProperty("toggle1", "false");
+        props.setProperty("toggle2", "true");
 
-        mockAppProps(mockAppProps);
+        mockAppProps(props);
         assertThat(ToggleClient.isFeatureEnabled("toggle1")).isFalse();
-        mockAppProps(mockAppProps);
+        mockAppProps(props);
         assertThat(ToggleClient.isFeatureEnabled("toggle2")).isTrue();
-        mockAppProps(mockAppProps);
+        mockAppProps(props);
         assertThat(ToggleClient.isFeatureEnabled("toggle3")).isFalse();
     }
 
@@ -50,22 +48,21 @@ public class ToggleClientTest {
         String toggleServerUri = "fakehost:8090";
         String toggleId = "toggle1";
 
-        List<String> mockAppProps = new ArrayList<>();
-        mockAppProps.add(toggleId + "=true");
-        mockAppProps.add("toggleServerUri=" + toggleServerUri);
+        Properties props = new Properties();
+        props.setProperty(toggleId, "true");
+        props.setProperty("toggleServerUri", toggleServerUri);
 
-        mockAppProps(mockAppProps);
+        mockAppProps(props);
         mockServerToggleValue(toggleId, toggleServerUri, "false");
         assertThat(ToggleClient.isFeatureEnabled(toggleId)).isFalse();
     }
 
-    private void mockAppProps(final List<String> appPropsList) throws Exception {
-        InputStream inputStream = new ByteArrayInputStream(String.join("\n", appPropsList).getBytes());
-        BDDMockito.given(ConnectorUtils.getResourceAsStream(Mockito.anyString())).willReturn(inputStream);
+    private void mockAppProps(final Properties props) throws Exception {
+        BDDMockito.given(FileUtils.getAppProperties()).willReturn(props);
     }
 
     private void mockServerToggleValue(final String toggleId, final String toggleServerUri, final String mockedValue) {
         Mockito.when(response.readEntity(String.class)).thenReturn(mockedValue);
-        BDDMockito.given(ConnectorUtils.requestToggleValue(toggleId, toggleServerUri)).willReturn(response);
+        BDDMockito.given(RestUtils.requestToggleValue(toggleId, toggleServerUri)).willReturn(response);
     }
 }

@@ -1,9 +1,8 @@
 plugins {
-    id 'java'
+    id 'war'
     id 'eclipse-wtp'
     id 'org.springframework.boot' version '2.0.0.RELEASE'
     id 'io.spring.dependency-management' version '1.0.4.RELEASE'
-    id 'war'
     id "com.bmuschko.cargo" version "2.6"
 }
 
@@ -11,33 +10,52 @@ group = 'org.featuretoggle.server'
 
 allprojects {
     version = '1.0.0'
+
+    repositories {
+        jcenter()
+    }
+
+    plugins.withType(JavaPlugin) {
+        dependencies {
+            // lombok
+            implementation 'org.projectlombok:lombok:1.18.6'
+            annotationProcessor 'org.projectlombok:lombok:1.18.6'
+            implementation 'org.slf4j:slf4j-api:1.7.25'
+        }
+    }
+
+    if (project.name.startsWith("api")) {
+        project.group = 'org.featuretoggle.client'
+    }
+}
+
+ext {
+    cargoConfig = [
+        debugPort : '5018',
+        portNumber : '8090'
+    ]
 }
 
 project.webAppDirName = 'ui/build'
-ext {
-    cargoConfig = [ debugPort : '5018', portNumber : '8090' ]
-}
-
 apply from: "$rootDir/gradle/cargo-config.gradle"
 
-repositories {
-    jcenter()
-}
-
 dependencies {
-    implementation 'org.projectlombok:lombok:1.18.6'
-	annotationProcessor 'org.projectlombok:lombok:1.18.6'
-
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
     providedRuntime 'javax.el:javax.el-api:3.0.0'
 
     implementation('org.springframework.boot:spring-boot-starter-web') {
         exclude(module: 'hibernate-validator')
     }
-    implementation 'org.slf4j:slf4j-api:1.7.25'
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
+    implementation 'commons-codec:commons-codec:1.12'
 
     testImplementation 'org.slf4j:slf4j-log4j12:1.7.25'
     testImplementation 'junit:junit:4.12'
+    testImplementation 'org.powermock:powermock-module-junit4:2.0.0'
+    testImplementation 'org.powermock:powermock-api-mockito2:2.0.0'
+    testImplementation 'org.mockito:mockito-core:2.24.5'
+    testImplementation 'org.assertj:assertj-core:3.12.0'
 }
 
 bootRun {
