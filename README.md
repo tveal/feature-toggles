@@ -21,9 +21,11 @@ Goals:
 
 ### toggle-server and toggle-client
 
-The `toggle-server` project contains the `toggle-client` subproject, collectively producing:
+The `toggle-server` project contains the `api-<lang>-<protocol>` subprojects, collectively producing:
 - build/libs/toggle-server-${version}.war
-- toggle-client/build/libs/toggle-client-${version}.jar
+- api-java-rest/build/libs/api-java-rest-${version}.jar
+- api-java-sse/build/libs/api-java-sse-${version}.jar
+- ...
 
 ```bash
 # from toggle-server directory
