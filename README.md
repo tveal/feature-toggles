@@ -19,7 +19,7 @@ Goals:
 
 ## Build Things
 
-### toggle-server and toggle-client
+### toggle-server and api's
 
 The `toggle-server` project contains the `api-<lang>-<protocol>` subprojects, collectively producing:
 - build/libs/toggle-server-${version}.war

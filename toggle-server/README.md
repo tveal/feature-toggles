@@ -26,13 +26,13 @@ TODO:
     - code quality
     - get logger working in cargo container
 - ~~doc dev workflow~~
-- ~~doc toggle-client usage~~
+- ~~doc java api usage~~
 - doc toggle-server usage
 - javadoc on ToggleClient
 
 ## Client Usage
 
-build.gradle (assumes you have published the toggle-client artifacts to an accessible repo, or include locally with gradle composite builds)
+build.gradle (assumes you have published the desired api artifacts to an accessible repo, or include locally with gradle composite builds)
 ```gradle
 plugins {
     id 'java'
