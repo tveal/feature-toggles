@@ -1,12 +1,16 @@
 import React from 'react';
+import { Table } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import CheckboxToggle from './CheckboxToggle';
 
 const ToggleRow = ({ toggleId, toggleValue }) => {
     return (
-        <div>
-            toggleId: {toggleId};
-            value: {"" + toggleValue}
-        </div>
+        <Table.Row className="toggle-row">
+            <Table.Cell className="toggle-cell id-cell">{toggleId}</Table.Cell>
+            <Table.Cell className="toggle-cell val-cell">
+                <CheckboxToggle toggleId={toggleId} toggleValue={toggleValue} />
+            </Table.Cell>
+        </Table.Row>
     )
 };
 

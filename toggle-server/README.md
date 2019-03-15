@@ -1,5 +1,9 @@
 # Toggle Server
 
+Primitive UI
+
+![Primitive UI Screenshot](ui/img/primitive-ui.png)
+
 TODO:
 - Research in-memory db solution
 - build this out...
@@ -21,6 +25,11 @@ TODO:
         - in-memory db solution
         - persistent db solution with cold-start
     - UI for management
+        - ~~consume SSE events for toggle updates~~
+        - ~~show toggle list and current value~~
+        - impl auth
+        - impl roles/permissions
+        - impl change audits
     - tests
     - jacoco coverage
     - code quality
@@ -71,4 +80,32 @@ public class SampleJava {
         }
     }
 }
+```
+
+## UI Run Local
+
+### Option 1 (fast dev)
+
+Allows file-watching for ui changes; No rebuilds needed.
+
+Startup the toggler server:
+
+```bash
+toggle-server $ ./gradlew bootRun
+```
+
+Startup the ui:
+
+```bash
+toggle-server/ui $ npm start
+```
+
+### Option 2 (slow dev)
+
+Runs everything built together; No file watching; Requires rebuilds per change.
+
+Startup all-in-one toggle-server + ui:
+
+```bash
+toggle-server $ ./gradle cargoRunLocal -i
 ```

@@ -57,6 +57,7 @@ public class SseEmitterController {
     /**
      * http://localhost:8090/toggle-server/switch?toggleId=my-feature
      */
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping("/switch")
     public String publishMessage(@RequestParam("toggleId") final String toggleId) {
         String msg = ToggleRepository.switchToggle(toggleId);

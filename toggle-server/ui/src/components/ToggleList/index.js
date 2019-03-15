@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import { Table } from 'semantic-ui-react';
 import base64 from 'base-64';
-import ToggleRow from './ToggleRow'
+import ToggleRow from './ToggleRow';
 import './styles.css';
 
 class ToggleList extends Component {
@@ -27,16 +28,32 @@ class ToggleList extends Component {
     return (
       <div className="toggle-list">
         <header className="list-header">
-          <h1 className="list-title">Welcome to React</h1>
+          <h1 className="list-title">Toggle Server UI</h1>
         </header>
-        <p className="list-intro">
+        {/* <p className="list-intro">
           To get started, edit <code>src/components/ToggleList/index.js</code> and save to reload.
-        </p>
-        {Object.keys(this.state.msg).map((key, i) => (
-          <ul key={i}>
-            <ToggleRow toggleId={key} toggleValue={this.state.msg[key]} />
-          </ul>
-        ))}
+        </p> */}
+        <Table
+          celled
+          compact="very"
+          size="small"
+          unstackable
+          textAlign="center"
+          className="toggle-table"
+          striped
+        >
+          <Table.Header>
+            <Table.Row className="toggle-header-row">
+              <Table.HeaderCell className="toggle-id-header">Toggle ID</Table.HeaderCell>
+              <Table.HeaderCell className="toggle-val-header">Value</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {Object.keys(this.state.msg).map((key, i) => (
+              <ToggleRow key={i} toggleId={key} toggleValue={this.state.msg[key]} />
+            ))}
+          </Table.Body>
+        </Table>
       </div>
     );
   }

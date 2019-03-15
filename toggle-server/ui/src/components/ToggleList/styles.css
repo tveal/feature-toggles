@@ -1,6 +1,34 @@
 body {
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
-  }
-  
+  color: rgb(199, 255, 199);
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background-color: #333;
+}
+
+.toggle-list {
+  text-align: center;
+}
+
+.toggle-table {
+  margin: auto;
+  width: 350px;
+}
+
+.toggle-header-row {
+  color: rgb(159, 255, 159);
+  font-size: 16px;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.id-cell {
+  color: rgb(199, 255, 199);
+  padding: 0 20px;
+  text-align: left;
+}
+
+.toggle-row {
+  font-size: 14px;
+  height: 40px;
+  font-family: 'Courier New', Courier, monospace;
+}
