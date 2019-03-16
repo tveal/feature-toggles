@@ -4,7 +4,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,8 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 public class SseController {
 
-    private static final long ONE_DAY_MILLIS = 86400000L;
-
     private ExecutorService nonBlockingService = Executors.newCachedThreadPool();
 
     @Autowired
@@ -32,11 +29,7 @@ public class SseController {
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/sse")
     public SseEmitter handleSse() {
-        SseEmitter emitter = new SseEmitter(ONE_DAY_MILLIS);
-        emitter.onCompletion(() -> {
-            subscriberService.addBadSubscriber(emitter);
-        });
-        subscriberService.addSubscriber(emitter);
+        SseEmitter emitter = subscriberService.createNewSubscriber();
 
         nonBlockingService.execute(() -> {
             try {

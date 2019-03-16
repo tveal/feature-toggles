@@ -14,16 +14,19 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class SubscriberService {
 
+    private static final long ONE_DAY_MILLIS = 86400000L;
+
     private Set<SseEmitter> emitters = new HashSet<>();
 
     private Set<SseEmitter> failedEmitters = new HashSet<>();
 
-    public void addSubscriber(final SseEmitter emitter) {
-        emitters.add(emitter);
-    }
-
-    public void addBadSubscriber(final SseEmitter emitter) {
-        failedEmitters.add(emitter);
+    public SseEmitter createNewSubscriber() {
+        SseEmitter emitter = new SseEmitter(ONE_DAY_MILLIS);
+        emitter.onCompletion(() -> {
+            addFailedSubscriber(emitter);
+        });
+        addSubscriber(emitter);
+        return emitter;
     }
 
     public void sendMessageToSubsribers(final String msg) {
@@ -42,6 +45,14 @@ public class SubscriberService {
         } catch (Exception e) { // must catch any exception from send
             emitter.completeWithError(e);
         }
+    }
+
+    private void addSubscriber(final SseEmitter emitter) {
+        emitters.add(emitter);
+    }
+
+    private void addFailedSubscriber(final SseEmitter emitter) {
+        failedEmitters.add(emitter);
     }
 
     // removal must be done outside of forEach/iterator on emitters
