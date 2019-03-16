@@ -17,6 +17,8 @@ Goals:
         2. `application.properties` on classpath of _client-service_
         3. default to false
 
+---
+
 ## Build Things
 
 ### toggle-server and api's
@@ -39,12 +41,15 @@ The `toggle-server` project contains the `api-<lang>-<protocol>` subprojects, co
 ./gradlew clean build
 ```
 
+---
 
 ## Run Things Locally
 
-Currently, `cargoRunLocal` gradle task doesn't show the slf4j logs, so use `bootRun` for now (faster but no ui for server). You should also periodically run `./gradlew clean build` in the respective directories when changing things.
+### Option 1
 
-### Server
+Fast dev workflow; Run Server, UI, and Sample Client separately
+
+#### Server
 
 ```bash
 # from toggle-server directory
@@ -55,7 +60,18 @@ Request toggle value with a url like:
 
 http://localhost:8090/toggle-server/get-toggle?toggleId=my-feature
 
-### Sample Client Service
+#### UI
+
+Allows file-watching for ui changes; No rebuilds needed.
+
+```bash
+# from toggle-server/ui directory
+npm start
+```
+
+On startup, this should automatically open the ui at http://localhost:3000/
+
+#### Sample Client Service
 
 ```bash
 # from sample-client-service directory
@@ -65,3 +81,20 @@ http://localhost:8090/toggle-server/get-toggle?toggleId=my-feature
 Visit the following url:
 
 http://localhost:8900/sample-client-service
+
+### Option 2
+
+Slower startup; Run Server/UI as one deployable war.
+Currently, `cargoRunLocal` gradle task doesn't show the slf4j logs.
+Haven't gotten around to configuring log properties.
+
+#### Server + UI
+
+```bash
+# from toggle-server directory
+./gradle cargoRunLocal -i
+```
+
+Visit the following url:
+
+http://localhost:8090/toggle-server/

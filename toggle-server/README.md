@@ -27,6 +27,9 @@ TODO:
     - UI for management
         - ~~consume SSE events for toggle updates~~
         - ~~show toggle list and current value~~
+        - add toggle
+        - remove toggle
+        - toggle display name vs toggleId
         - impl auth
         - impl roles/permissions
         - impl change audits
@@ -80,32 +83,4 @@ public class SampleJava {
         }
     }
 }
-```
-
-## UI Run Local
-
-### Option 1 (fast dev)
-
-Allows file-watching for ui changes; No rebuilds needed.
-
-Startup the toggler server:
-
-```bash
-toggle-server $ ./gradlew bootRun
-```
-
-Startup the ui:
-
-```bash
-toggle-server/ui $ npm start
-```
-
-### Option 2 (slow dev)
-
-Runs everything built together; No file watching; Requires rebuilds per change.
-
-Startup all-in-one toggle-server + ui:
-
-```bash
-toggle-server $ ./gradle cargoRunLocal -i
 ```
