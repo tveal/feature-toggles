@@ -1,6 +1,5 @@
 package org.featuretoggle.server;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
@@ -11,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class ApiController implements ErrorController {
@@ -32,11 +34,10 @@ public class ApiController implements ErrorController {
             Boolean toggleValue = toggleRepo.retrieveToggleValue(decodedToggleId);
             if (toggleValue != null) {
                 returnValue = toggleValue.toString();
-            } else {
-                returnValue = "You requested value for toggleId: " + decodedToggleId;
             }
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             returnValue = "Invalid toggleId";
+            log.error("Something failed looking up toggleId: {};", toggleId, e);
         }
         return returnValue;
     }
