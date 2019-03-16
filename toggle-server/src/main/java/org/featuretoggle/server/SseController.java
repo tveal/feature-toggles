@@ -1,11 +1,8 @@
 package org.featuretoggle.server;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,15 +17,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-public class SseEmitterController {
+public class SseController {
 
     private static final long ONE_DAY_MILLIS = 86400000L;
 
     private ExecutorService nonBlockingService = Executors.newCachedThreadPool();
 
-    private Set<SseEmitter> emitters = new HashSet<>();
-
-    private Set<SseEmitter> failedEmitters = new HashSet<>();
+    @Autowired
+    private SubscriberService subscriberService;
 
     @Autowired
     private ToggleRepository toggleRepo;
@@ -38,18 +34,14 @@ public class SseEmitterController {
     public SseEmitter handleSse() {
         SseEmitter emitter = new SseEmitter(ONE_DAY_MILLIS);
         emitter.onCompletion(() -> {
-            failedEmitters.add(emitter);
+            subscriberService.addBadSubscriber(emitter);
         });
-        emitters.add(emitter);
+        subscriberService.addSubscriber(emitter);
 
         nonBlockingService.execute(() -> {
             try {
                 String msg = toggleRepo.retrieveAllToggles();
-                if (!StringUtils.isEmpty(msg)) {
-                    log.info("Sending emitter message: {}", msg);
-                    sendEmitterMessageBase64(emitter, msg);
-                    removeFailedEmitters();
-                }
+                subscriberService.sendMessageToSubsribers(msg);
             } catch (Exception e) {
                 log.error("Failed to send emitter message;", e);
                 emitter.completeWithError(e);
@@ -66,29 +58,8 @@ public class SseEmitterController {
     public String publishMessage(@RequestParam("toggleId") final String toggleId) {
         String msg = toggleRepo.switchToggle(toggleId);
 
-        if (!StringUtils.isEmpty(msg)) {
-            log.info("Sending message to {} emitters: '{}'", emitters.size(), msg);
-            emitters.forEach(emitter -> sendEmitterMessageBase64(emitter, msg));
-            removeFailedEmitters();
-        }
+        subscriberService.sendMessageToSubsribers(msg);
         return msg;
     }
 
-    private void sendEmitterMessageBase64(final SseEmitter emitter, final String msg) {
-        try {
-            emitter.send(Base64.encodeBase64URLSafe(msg.getBytes()));
-        } catch (Exception e) { // must catch any exception from send
-            emitter.completeWithError(e);
-        }
-    }
-
-    // removal must be done outside of forEach/iterator on emitters
-    private void removeFailedEmitters() {
-        int emitterPreCount = emitters.size();
-        emitters.removeAll(failedEmitters);
-        if (!failedEmitters.isEmpty()) {
-            log.info("Removed closed emitters; emitters size: {} -> {}", emitterPreCount, emitters.size());
-        }
-        failedEmitters = new HashSet<>();
-    }
 }
