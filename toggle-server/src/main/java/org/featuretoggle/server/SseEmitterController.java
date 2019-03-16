@@ -6,6 +6,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.commons.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,9 @@ public class SseEmitterController {
 
     private Set<SseEmitter> failedEmitters = new HashSet<>();
 
+    @Autowired
+    private ToggleRepository toggleRepo;
+
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/sse")
     public SseEmitter handleSse() {
@@ -40,7 +44,7 @@ public class SseEmitterController {
 
         nonBlockingService.execute(() -> {
             try {
-                String msg = ToggleRepository.retrieveAllToggles();
+                String msg = toggleRepo.retrieveAllToggles();
                 if (!StringUtils.isEmpty(msg)) {
                     log.info("Sending emitter message: {}", msg);
                     sendEmitterMessageBase64(emitter, msg);
@@ -60,7 +64,7 @@ public class SseEmitterController {
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping("/switch")
     public String publishMessage(@RequestParam("toggleId") final String toggleId) {
-        String msg = ToggleRepository.switchToggle(toggleId);
+        String msg = toggleRepo.switchToggle(toggleId);
 
         if (!StringUtils.isEmpty(msg)) {
             log.info("Sending message to {} emitters: '{}'", emitters.size(), msg);

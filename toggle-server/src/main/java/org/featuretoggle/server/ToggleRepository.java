@@ -3,12 +3,15 @@ package org.featuretoggle.server;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.stereotype.Component;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Component
 public class ToggleRepository {
 
     private static final Map<String, Boolean> TOGGLES = new HashMap<String, Boolean>() {
@@ -22,15 +25,15 @@ public class ToggleRepository {
         }
     };
 
-    public static String retrieveAllToggles() {
+    public String retrieveAllToggles() {
         return serializeToggleMap(TOGGLES);
     }
 
-    public static Boolean retrieveToggleValue(final String toggleId) {
+    public Boolean retrieveToggleValue(final String toggleId) {
         return TOGGLES.get(toggleId);
     }
 
-    public static String switchToggle(final String toggleId) {
+    public String switchToggle(final String toggleId) {
         Boolean currentToggle = TOGGLES.get(toggleId);
         if (currentToggle.booleanValue()) {
             TOGGLES.put(toggleId, Boolean.FALSE);
@@ -42,7 +45,7 @@ public class ToggleRepository {
         return serializeToggleMap(changedToggleMap);
     }
 
-    private static String serializeToggleMap(final Map<String, Boolean> toggleMap) {
+    private String serializeToggleMap(final Map<String, Boolean> toggleMap) {
         String mapString = null;
         try {
             mapString = new ObjectMapper().writerWithDefaultPrettyPrinter()

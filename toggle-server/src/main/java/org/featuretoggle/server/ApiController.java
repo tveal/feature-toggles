@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,9 @@ public class ApiController implements ErrorController {
 
     private static final String ERR_PATH = "/error";
 
+    @Autowired
+    private ToggleRepository toggleRepo;
+
     /**
      * Sample url: http://localhost:8090/toggle-server/get-toggle?toggleId=feature%2FPROJ-1234
      */
@@ -25,7 +29,7 @@ public class ApiController implements ErrorController {
 
         try {
             String decodedToggleId = URLDecoder.decode(toggleId, StandardCharsets.UTF_8.name());
-            Boolean toggleValue = ToggleRepository.retrieveToggleValue(decodedToggleId);
+            Boolean toggleValue = toggleRepo.retrieveToggleValue(decodedToggleId);
             if (toggleValue != null) {
                 returnValue = toggleValue.toString();
             } else {
