@@ -22,9 +22,6 @@ public class SubscriberService {
 
     public SseEmitter createNewSubscriber() {
         SseEmitter emitter = new SseEmitter(ONE_DAY_MILLIS);
-        emitter.onCompletion(() -> {
-            addFailedSubscriber(emitter);
-        });
         addSubscriber(emitter);
         return emitter;
     }
