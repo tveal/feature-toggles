@@ -29,21 +29,22 @@ public class SubscriberService {
         return emitter;
     }
 
-    public void sendMessageToSubsribers(final String msg) {
+    public void sendMessageToAllSubscribers(final String msg) {
         if (!StringUtils.isEmpty(msg)) {
             log.info("Sending message to {} emitters: '{}'", emitters.size(), msg);
-            emitters.forEach(emitter -> sendEmitterMessageBase64(emitter, msg));
+            emitters.forEach(emitter -> sendMessageToOneSubscriber(emitter, msg));
             removeFailedEmitters();
         } else {
             log.warn("Did not send message to subscribers because it is empty: {}", msg);
         }
     }
 
-    private void sendEmitterMessageBase64(final SseEmitter emitter, final String msg) {
+    public void sendMessageToOneSubscriber(final SseEmitter emitter, final String msg) {
         try {
             emitter.send(Base64.encodeBase64URLSafe(msg.getBytes()));
         } catch (Exception e) { // must catch any exception from send
             emitter.completeWithError(e);
+            addFailedSubscriber(emitter);
         }
     }
 
@@ -62,6 +63,6 @@ public class SubscriberService {
         if (!failedEmitters.isEmpty()) {
             log.info("Removed closed emitters; emitters size: {} -> {}", emitterPreCount, emitters.size());
         }
-        failedEmitters = new HashSet<>();
+        failedEmitters.clear();
     }
 }
